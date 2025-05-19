@@ -1,104 +1,93 @@
 // ---------- Constantes ----------
 const DEFAULT_SPEED = 130; // km/h (référence)
-const BASE_SPEED    = 100; // km/h – point de réf. pour la conso
 
-// Conso moyennes à 100 km/h
-const CONSUMPTION_BASE = {
-  electricKWhPer100 : 15,   // kWh / 100 km
-  dieselLPer100     : 5.5,  // L / 100 km
-  gasolineLPer100   : 6.8   // L / 100 km
+// Coefficients quadratiques (a + b·v + c·v²)
+const COEFF = {
+  gasoline: { a: 1.0, b: 0.02,  c: 0.0003 },   // L/100 km
+  diesel  : { a: 0.8, b: 0.018, c: 0.00025 },  // L/100 km
+  electric: { a: 4.0, b: 0.005, c: 0.0002 }    // kWh/100 km
 };
 
-// Facteurs d’émission
-const EMISSION_FACTORS = {
-  co2PerKWh      : 50,   // g CO₂ / kWh
-  co2PerDieselL  : 2680, // g CO₂ / L
-  co2PerGasolineL: 2310  // g CO₂ / L
+// Facteurs d'émission (g CO₂ par unité)
+const EMISSION = {
+  gasolineL: 2310,  // g CO₂ / litre
+  dieselL  : 2660,  // g CO₂ / litre
+  kWh      : 35     // g CO₂ / kWh (mix France)
 };
 
 // ---------- Sélecteurs ----------
-const distanceButtons   = document.querySelectorAll('.distance-button');
-const speedSlider       = document.getElementById('speed-slider');
-const chosenSpeedLabel  = document.getElementById('chosen-speed');
+const distBtns       = document.querySelectorAll('.distance-button');
+const speedSlider    = document.getElementById('speed-slider');
+const chosenSpeedLbl = document.getElementById('chosen-speed');
 
 // Référence
-const defaultTime       = document.getElementById('default-time');
-const defaultCO2        = document.getElementById('default-co2');
-const defaultElec       = document.getElementById('default-elec');
-const defaultDiesel     = document.getElementById('default-diesel');
-const defaultGas        = document.getElementById('default-gas');
+const dTime   = document.getElementById('default-time');
+const dCO2    = document.getElementById('default-co2');
+const dElec   = document.getElementById('default-elec');
+const dDiesel = document.getElementById('default-diesel');
+const dGas    = document.getElementById('default-gas');
+// Perso
+const cTime   = document.getElementById('custom-time');
+const cCO2    = document.getElementById('custom-co2');
+const cElec   = document.getElementById('custom-elec');
+const cDiesel = document.getElementById('custom-diesel');
+const cGas    = document.getElementById('custom-gas');
 
-// Personnalisé
-const customTime        = document.getElementById('custom-time');
-const customCO2         = document.getElementById('custom-co2');
-const customElec        = document.getElementById('custom-elec');
-const customDiesel      = document.getElementById('custom-diesel');
-const customGas         = document.getElementById('custom-gas');
-
-let selectedDistance = 50; // km par défaut
+let distanceKm = 50;
 
 // ---------- Helpers ----------
 const pad = n => String(n).padStart(2,'0');
-const hoursToHMM = h => {
+const hToHMM = h => {
   const mTot = Math.round(h*60);
   return `${pad(Math.floor(mTot/60))}h${pad(mTot%60)}`;
 };
-const formatNumber = (v,d=1,u='') => `${v.toFixed(d)}${u}`;
+const fmt = (v,d=1,u='') => `${v.toFixed(d)}${u}`;
 
-// ---------- Modèle conso ----------
-const consumptionFactor = v => (v/BASE_SPEED)**2;
+// ---------- Formules ----------
+function poly({a,b,c}, v){ return a + b*v + c*v*v; }
 
-function compute(distKm, speed){
-  const f = consumptionFactor(speed);
+function compute(dist, v){
+  // Consommations spécifiques
+  const gasL100   = poly(COEFF.gasoline, v);
+  const dieselL100= poly(COEFF.diesel,   v);
+  const elecKWh100= poly(COEFF.electric, v);
 
-  // Conso ajustée
-  const elecKWh = distKm * CONSUMPTION_BASE.electricKWhPer100 * f / 100;
-  const dieselL = distKm * CONSUMPTION_BASE.dieselLPer100     * f / 100;
-  const gasL    = distKm * CONSUMPTION_BASE.gasolineLPer100   * f / 100;
+  // Pour la distance
+  const gasL   = gasL100   * dist / 100;
+  const dieselL= dieselL100* dist / 100;
+  const elecKWh= elecKWh100* dist / 100;
+
+  // Émissions pour l'électrique (seule valeur affichée)
+  const co2Elec = elecKWh * EMISSION.kWh;
 
   return {
-    travelHours : distKm / speed,
-    elecKWh,
-    dieselL,
-    gasL,
-    co2Elec   : elecKWh * EMISSION_FACTORS.co2PerKWh,
-    co2Diesel : dieselL * EMISSION_FACTORS.co2PerDieselL,
-    co2Gas    : gasL    * EMISSION_FACTORS.co2PerGasolineL
+    tHours : dist / v,
+    gasL, dieselL, elecKWh,
+    co2Elec
   };
 }
 
 // ---------- Affichage ----------
-function updateDisplay(){
+function update(){
   const v = +speedSlider.value;
-  chosenSpeedLabel.textContent = `${v}\u00A0km/h`;
+  chosenSpeedLbl.textContent = `${v}\u00A0km/h`;
 
-  // Référence
-  const ref = compute(selectedDistance, DEFAULT_SPEED);
-  defaultTime.textContent   = hoursToHMM(ref.travelHours);
-  defaultCO2.textContent    = formatNumber(ref.co2Elec/1000,2,' kg');
-  defaultElec.textContent   = formatNumber(ref.elecKWh,1,' kWh');
-  defaultDiesel.textContent = formatNumber(ref.dieselL,1,' L');
-  defaultGas.textContent    = formatNumber(ref.gasL,1,' L');
+  const ref = compute(distanceKm, DEFAULT_SPEED);
+  dTime.textContent   = hToHMM(ref.tHours);
+  dCO2.textContent    = fmt(ref.co2Elec/1000,2,' kg');
+  dElec.textContent   = fmt(ref.elecKWh,1,' kWh');
+  dDiesel.textContent = fmt(ref.dieselL,1,' L');
+  dGas.textContent    = fmt(ref.gasL,1,' L');
 
-  // Perso
-  const cur = compute(selectedDistance, v);
-  customTime.textContent   = hoursToHMM(cur.travelHours);
-  customCO2.textContent    = formatNumber(cur.co2Elec/1000,2,' kg');
-  customElec.textContent   = formatNumber(cur.elecKWh,1,' kWh');
-  customDiesel.textContent = formatNumber(cur.dieselL,1,' L');
-  customGas.textContent    = formatNumber(cur.gasL,1,' L');
+  const cur = compute(distanceKm, v);
+  cTime.textContent   = hToHMM(cur.tHours);
+  cCO2.textContent    = fmt(cur.co2Elec/1000,2,' kg');
+  cElec.textContent   = fmt(cur.elecKWh,1,' kWh');
+  cDiesel.textContent = fmt(cur.dieselL,1,' L');
+  cGas.textContent    = fmt(cur.gasL,1,' L');
 }
 
 // ---------- Événements ----------
-distanceButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    distanceButtons.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedDistance = +btn.dataset.distance;
-    updateDisplay();
-  });
-});
-speedSlider.addEventListener('input',updateDisplay);
+.distBtns = Array.from(distBtns);
 
-// ---------- Init ----------
-updateDisplay();
+rate

@@ -16,29 +16,19 @@
 <body>
   <div class="calculator-container">
     <h1 class="title">TripTime</h1>
-    <h2 class="subtitle">Comparateur de temps &amp; impact CO₂</h2>
+    <h2 class="subtitle">Comparateur de temps & impact CO₂</h2>
 
-    <!-- Animation soleil -->
-    <div class="sun-container" aria-hidden="true">
-      <div class="sun-wrapper">
-        <div class="sun-core"></div>
-        <!-- 12 rayons / pétales -->
-        <div class="sun-ray" style="--i:0"></div>
-        <div class="sun-ray" style="--i:1"></div>
-        <div class="sun-ray" style="--i:2"></div>
-        <div class="sun-ray" style="--i:3"></div>
-        <div class="sun-ray" style="--i:4"></div>
-        <div class="sun-ray" style="--i:5"></div>
-        <div class="sun-ray" style="--i:6"></div>
-        <div class="sun-ray" style="--i:7"></div>
-        <div class="sun-ray" style="--i:8"></div>
-        <div class="sun-ray" style="--i:9"></div>
-        <div class="sun-ray" style="--i:10"></div>
-        <div class="sun-ray" style="--i:11"></div>
-      </div>
+    <!-- Animation orbitale -->
+    <div class="orbit-container">
+      <svg id="orbit-svg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid meet">
+        <g id="orbit-group" transform="rotate(-12 150 75)">
+          <ellipse cx="150" cy="75" rx="120" ry="30"></ellipse>
+          <circle id="orbit-dot" r="5"></circle>
+        </g>
+      </svg>
     </div>
 
-    <!-- Distance -->
+    <!-- Distance preset buttons -->
     <div class="distance-buttons">
       <button class="distance-button active" data-distance="50">50&nbsp;km</button>
       <button class="distance-button" data-distance="100">100&nbsp;km</button>
@@ -46,34 +36,33 @@
       <button class="distance-button" data-distance="500">500&nbsp;km</button>
     </div>
 
-    <!-- Vitesse -->
+    <!-- Slider vitesse -->
     <div class="speed-slider-container">
       <label class="speed-label" for="speed-slider">
-        Vitesse choisie&nbsp;: <span id="chosen-speed">130&nbsp;km/h</span>
+        Vitesse choisie : <span id="chosen-speed">130&nbsp;km/h</span>
       </label>
       <input type="range" id="speed-slider" min="50" max="250" value="130" step="1">
     </div>
 
-    <!-- Résultats -->
+    <!-- Résultats comparatifs -->
     <div class="comparison-container">
-      <!-- Référence -->
+      <!-- Scénario référence -->
       <div class="scenario" id="default-scenario">
         <h3>Référence&nbsp;130&nbsp;km/h</h3>
-        <div class="result-item"><label>Temps trajet&nbsp;:</label><span id="default-time">--</span></div>
-        <div class="result-item"><label>CO₂&nbsp;:</label><span id="default-co2">--</span></div>
-        <div class="result-item"><label>Énergie élec&nbsp;:</label><span id="default-elec">--</span></div>
-        <div class="result-item"><label>Diesel&nbsp;:</label><span id="default-diesel">--</span></div>
-        <div class="result-item"><label>Essence&nbsp;:</label><span id="default-gas">--</span></div>
+        <div class="result-item"><label>Temps trajet :</label><span id="default-time">--</span></div>
+        <div class="result-item"><label>CO₂ :</label><span id="default-co2">--</span></div>
+        <div class="result-item"><label>Énergie élec :</label><span id="default-elec">--</span></div>
+        <div class="result-item"><label>Diesel :</label><span id="default-diesel">--</span></div>
+        <div class="result-item"><label>Essence :</label><span id="default-gas">--</span></div>
       </div>
-
-      <!-- Personnalisé -->
+      <!-- Scénario personnalisé -->
       <div class="scenario" id="custom-scenario">
         <h3>Votre&nbsp;vitesse</h3>
-        <div class="result-item"><label>Temps trajet&nbsp;:</label><span id="custom-time">--</span></div>
-        <div class="result-item"><label>CO₂&nbsp;:</label><span id="custom-co2">--</span></div>
-        <div class="result-item"><label>Énergie élec&nbsp;:</label><span id="custom-elec">--</span></div>
-        <div class="result-item"><label>Diesel&nbsp;:</label><span id="custom-diesel">--</span></div>
-        <div class="result-item"><label>Essence&nbsp;:</label><span id="custom-gas">--</span></div>
+        <div class="result-item"><label>Temps trajet :</label><span id="custom-time">--</span></div>
+        <div class="result-item"><label>CO₂ :</label><span id="custom-co2">--</span></div>
+        <div class="result-item"><label>Énergie élec :</label><span id="custom-elec">--</span></div>
+        <div class="result-item"><label>Diesel :</label><span id="custom-diesel">--</span></div>
+        <div class="result-item"><label>Essence :</label><span id="custom-gas">--</span></div>
       </div>
     </div>
   </div>

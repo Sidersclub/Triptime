@@ -21,16 +21,19 @@ body{
 svg{width:100%;height:auto}
 svg path:not(.trail){stroke:var(--fg-dim);stroke-width:.3;fill:none}
 
-/* Traînée courte, disparaît < 1 s après passage */
+/* Traînée courte derrière chaque bille */
 .trail{
-  stroke:white; stroke-width:1; fill:none; stroke-linecap:round;
-  /* 4 % visible, 96 % transparent */
-  stroke-dasharray:0.04 0.96;
-  stroke-dashoffset:0;
-  opacity:0.9;
+  stroke:white;
+  stroke-width:1;
+  fill:none;
+  stroke-linecap:round;
+  /* 6 px visibles puis ~140 px transparents */
+  stroke-dasharray:6 140;
   animation:trailMove var(--dur) linear infinite;
 }
-@keyframes trailMove{to{stroke-dashoffset:-1;}}
+@keyframes trailMove{
+  to{ stroke-dashoffset:-146; }   /* 6+140 = 146 px : un tour complet */
+}
 
 /* —— UI —— */
 .distance-buttons{display:flex;gap:8px;margin-bottom:40px}

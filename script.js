@@ -1,122 +1,104 @@
 // ---------- Constantes ----------
-const DEFAULT_SPEED = 130; // km/h
+const DEFAULT_SPEED = 130; // km/h (référence)
+const BASE_SPEED    = 100; // km/h – point de réf. pour la conso
 
-const CONSUMPTION = {
-  electricKWhPer100: 18,      // kWh / 100 km (berline)
-  dieselLPer100: 6,           // L / 100 km
-  gasolineLPer100: 7.5,       // L / 100 km
-  co2PerKWh: 50,              // g CO2 / kWh (mix France 2023 approx.)
-  co2PerDieselL: 2680,        // g CO2 / litre
-  co2PerGasolineL: 2310       // g CO2 / litre
+// Conso moyennes à 100 km/h
+const CONSUMPTION_BASE = {
+  electricKWhPer100 : 15,   // kWh / 100 km
+  dieselLPer100     : 5.5,  // L / 100 km
+  gasolineLPer100   : 6.8   // L / 100 km
+};
+
+// Facteurs d’émission
+const EMISSION_FACTORS = {
+  co2PerKWh      : 50,   // g CO₂ / kWh
+  co2PerDieselL  : 2680, // g CO₂ / L
+  co2PerGasolineL: 2310  // g CO₂ / L
 };
 
 // ---------- Sélecteurs ----------
-const distanceButtons = document.querySelectorAll('.distance-button');
-const speedSlider      = document.getElementById('speed-slider');
-const chosenSpeedLabel = document.getElementById('chosen-speed');
+const distanceButtons   = document.querySelectorAll('.distance-button');
+const speedSlider       = document.getElementById('speed-slider');
+const chosenSpeedLabel  = document.getElementById('chosen-speed');
 
-// Référence elements
-const defaultTime   = document.getElementById('default-time');
-const defaultCO2    = document.getElementById('default-co2');
-const defaultElec   = document.getElementById('default-elec');
-const defaultDiesel = document.getElementById('default-diesel');
-const defaultGas    = document.getElementById('default-gas');
+// Référence
+const defaultTime       = document.getElementById('default-time');
+const defaultCO2        = document.getElementById('default-co2');
+const defaultElec       = document.getElementById('default-elec');
+const defaultDiesel     = document.getElementById('default-diesel');
+const defaultGas        = document.getElementById('default-gas');
 
-// Custom elements
-const customTime   = document.getElementById('custom-time');
-const customCO2    = document.getElementById('custom-co2');
-const customElec   = document.getElementById('custom-elec');
-const customDiesel = document.getElementById('custom-diesel');
-const customGas    = document.getElementById('custom-gas');
+// Personnalisé
+const customTime        = document.getElementById('custom-time');
+const customCO2         = document.getElementById('custom-co2');
+const customElec        = document.getElementById('custom-elec');
+const customDiesel      = document.getElementById('custom-diesel');
+const customGas         = document.getElementById('custom-gas');
 
 let selectedDistance = 50; // km par défaut
 
 // ---------- Helpers ----------
-const pad = (n) => String(n).padStart(2, '0');
-function hoursToHMM(hours) {
-  const totalMinutes = Math.round(hours * 60);
-  const h = Math.floor(totalMinutes / 60);
-  const m = totalMinutes % 60;
-  return `${pad(h)}h${pad(m)}`;
-}
+const pad = n => String(n).padStart(2,'0');
+const hoursToHMM = h => {
+  const mTot = Math.round(h*60);
+  return `${pad(Math.floor(mTot/60))}h${pad(mTot%60)}`;
+};
+const formatNumber = (v,d=1,u='') => `${v.toFixed(d)}${u}`;
 
-function formatNumber(value, decimals = 1, unit = '') {
-  return `${value.toFixed(decimals)}${unit}`;
-}
+// ---------- Modèle conso ----------
+const consumptionFactor = v => (v/BASE_SPEED)**2;
 
-// ---------- Calculs ----------
-function compute(distanceKm, speedKmh) {
-  const travelHours = distanceKm / speedKmh;
+function compute(distKm, speed){
+  const f = consumptionFactor(speed);
 
-  // Énergie / Emissions
-  const elecKWh = distanceKm * CONSUMPTION.electricKWhPer100 / 100;
-  const dieselL = distanceKm * CONSUMPTION.dieselLPer100 / 100;
-  const gasL    = distanceKm * CONSUMPTION.gasolineLPer100 / 100;
-
-  const co2Elec   = elecKWh * CONSUMPTION.co2PerKWh;
-  const co2Diesel = dieselL  * CONSUMPTION.co2PerDieselL;
-  const co2Gas    = gasL     * CONSUMPTION.co2PerGasolineL;
+  // Conso ajustée
+  const elecKWh = distKm * CONSUMPTION_BASE.electricKWhPer100 * f / 100;
+  const dieselL = distKm * CONSUMPTION_BASE.dieselLPer100     * f / 100;
+  const gasL    = distKm * CONSUMPTION_BASE.gasolineLPer100   * f / 100;
 
   return {
-    travelHours,
-    co2: co2Elec, // on affiche la plus basse (élec) par défaut
+    travelHours : distKm / speed,
     elecKWh,
     dieselL,
     gasL,
-    co2Elec,
-    co2Diesel,
-    co2Gas
+    co2Elec   : elecKWh * EMISSION_FACTORS.co2PerKWh,
+    co2Diesel : dieselL * EMISSION_FACTORS.co2PerDieselL,
+    co2Gas    : gasL    * EMISSION_FACTORS.co2PerGasolineL
   };
 }
 
 // ---------- Affichage ----------
-function updateDisplay() {
-  const customSpeed = parseInt(speedSlider.value, 10);
-  chosenSpeedLabel.textContent = `${customSpeed}\u00A0km/h`;
+function updateDisplay(){
+  const v = +speedSlider.value;
+  chosenSpeedLabel.textContent = `${v}\u00A0km/h`;
 
-  // Référence 130 km/h
+  // Référence
   const ref = compute(selectedDistance, DEFAULT_SPEED);
   defaultTime.textContent   = hoursToHMM(ref.travelHours);
-  defaultCO2.textContent    = formatNumber(ref.co2Elec/1000, 2, ' kg');
-  defaultElec.textContent   = formatNumber(ref.elecKWh,   1, ' kWh');
-  defaultDiesel.textContent = formatNumber(ref.dieselL,   1, ' L');
-  defaultGas.textContent    = formatNumber(ref.gasL,      1, ' L');
+  defaultCO2.textContent    = formatNumber(ref.co2Elec/1000,2,' kg');
+  defaultElec.textContent   = formatNumber(ref.elecKWh,1,' kWh');
+  defaultDiesel.textContent = formatNumber(ref.dieselL,1,' L');
+  defaultGas.textContent    = formatNumber(ref.gasL,1,' L');
 
-  // Scénario perso
-  const cur = compute(selectedDistance, customSpeed);
+  // Perso
+  const cur = compute(selectedDistance, v);
   customTime.textContent   = hoursToHMM(cur.travelHours);
-  customCO2.textContent    = formatNumber(cur.co2Elec/1000, 2, ' kg');
-  customElec.textContent   = formatNumber(cur.elecKWh,   1, ' kWh');
-  customDiesel.textContent = formatNumber(cur.dieselL,   1, ' L');
-  customGas.textContent    = formatNumber(cur.gasL,      1, ' L');
+  customCO2.textContent    = formatNumber(cur.co2Elec/1000,2,' kg');
+  customElec.textContent   = formatNumber(cur.elecKWh,1,' kWh');
+  customDiesel.textContent = formatNumber(cur.dieselL,1,' L');
+  customGas.textContent    = formatNumber(cur.gasL,1,' L');
 }
 
 // ---------- Événements ----------
-distanceButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    distanceButtons.forEach(b => b.classList.remove('active'));
+distanceButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    distanceButtons.forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    selectedDistance = parseInt(btn.dataset.distance, 10);
+    selectedDistance = +btn.dataset.distance;
     updateDisplay();
   });
 });
-
-speedSlider.addEventListener('input', updateDisplay);
-
-// ---------- Animation orbitale ----------
-const orbitDot = document.getElementById('orbit-dot');
-let angle = 0;
-function animateOrbit() {
-  angle = (angle + 0.5) % 360;
-  const rad = angle * Math.PI / 180;
-  const cx = 150, cy = 75, rx = 120, ry = 30;
-  const x  = cx + rx * Math.cos(rad);
-  const y  = cy + ry * Math.sin(rad);
-  orbitDot.setAttribute('cx', x);
-  orbitDot.setAttribute('cy', y);
-  requestAnimationFrame(animateOrbit);
-}
+speedSlider.addEventListener('input',updateDisplay);
 
 // ---------- Init ----------
 updateDisplay();
-animateOrbit();

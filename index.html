@@ -16,27 +16,35 @@
     <h1 class="title">TripTime</h1>
     <h2 class="subtitle">Comparateur de temps & impact CO₂</h2>
 
-    <!-- ——— Animation : centre + 5 orbites ——— -->
+     <!-- Animation : 5 ellipses + trainées -->
     <div class="orbit-container" aria-hidden="true">
       <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <path id="o20"  d="M150 150 m-20,0 a20 20 0 1 0 40 0 a20 20 0 1 0 -40 0"  />
-          <path id="o30"  d="M150 150 m-30,0 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0" />
-          <path id="o40"  d="M150 150 m-40,0 a40 40 0 1 0 80 0 a40 40 0 1 0 -80 0" />
-          <path id="o50"  d="M150 150 m-50,0 a50 50 0 1 0 100 0 a50 90 0 1 0 -100 0" />
-          <path id="o60" d="M150 150 m-60,0 a60 60 0 1 0 120 0 a60 60 0 1 0 -120 0" />
+          <!-- Ellipses (rx, ry) croissants -->
+          <path id="e30" d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0" />
+          <path id="e45" d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0" />
+          <path id="e60" d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0" />
+          <path id="e75" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0" />
+          <path id="e90" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0" />
         </defs>
 
         <!-- Centre moutarde -->
         <circle cx="150" cy="150" r="5" fill="#DEBA52"/>
 
-        <!-- 5 billes blanches -->
+         <!-- trainées blanches (dash anim) -->
+        <path class="trail" style="--dur:4s"  d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0" />
+        <path class="trail" style="--dur:6s"  d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0" />
+        <path class="trail" style="--dur:8s"  d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0" />
+        <path class="trail" style="--dur:10s" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0" />
+        <path class="trail" style="--dur:12s" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0" />
+        
+         <!-- billes blanches -->
         <g fill="white">
-          <circle r="3"><animateMotion dur="4s"  repeatCount="indefinite" rotate="auto"><mpath href="#o20"/></animateMotion></circle>
-          <circle r="3"><animateMotion dur="6s"  repeatCount="indefinite" rotate="auto"><mpath href="#o30"/></animateMotion></circle>
-          <circle r="3"><animateMotion dur="8s"  repeatCount="indefinite" rotate="auto"><mpath href="#o40"/></animateMotion></circle>
-          <circle r="3"><animateMotion dur="10s" repeatCount="indefinite" rotate="auto"><mpath href="#o50"/></animateMotion></circle>
-          <circle r="3"><animateMotion dur="12s" repeatCount="indefinite" rotate="auto"><mpath href="#o60"/></animateMotion></circle>
+          <circle r="3"><animateMotion dur="4s"  repeatCount="indefinite" rotate="auto"><mpath href="#e30"/></animateMotion></circle>
+          <circle r="3"><animateMotion dur="6s"  repeatCount="indefinite" rotate="auto"><mpath href="#e45"/></animateMotion></circle>
+          <circle r="3"><animateMotion dur="8s"  repeatCount="indefinite" rotate="auto"><mpath href="#e60"/></animateMotion></circle>
+          <circle r="3"><animateMotion dur="10s" repeatCount="indefinite" rotate="auto"><mpath href="#e75"/></animateMotion></circle>
+          <circle r="3"><animateMotion dur="12s" repeatCount="indefinite" rotate="auto"><mpath href="#e90"/></animateMotion></circle>
         </g>
       </svg>
     </div>

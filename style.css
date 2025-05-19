@@ -32,10 +32,10 @@ svg .trail{display:none}
 
 /* Billes : tailles progressives — plus la trajectoire est grande, plus la bille est grosse */
 svg g > circle:nth-of-type(1){r:2px;}   /* ellipse la plus petite */
-svg g > circle:nth-of-type(2){r:3px;}
-svg g > circle:nth-of-type(3){r:4px;}
-svg g > circle:nth-of-type(4){r:5px;}
-svg g > circle:nth-of-type(5){r:6px;}   /* ellipse la plus grande */
+svg g > circle:nth-of-type(2){r:5px;}
+svg g > circle:nth-of-type(3){r:6px;}
+svg g > circle:nth-of-type(4){r:3px;}
+svg g > circle:nth-of-type(5){r:4px;}   /* ellipse la plus grande */
 
 /* —— UI —— */
 .distance-buttons{display:flex;gap:8px;margin-bottom:40px}

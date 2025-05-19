@@ -1,0 +1,177 @@
+/* —— Palette —— */
+:root {
+  --accent: #DEBA52;   /* Jaune moutarde */
+  --bg:     #000000;   /* Noir terminal  */
+  --fg:     #F5F5F5;   /* Texte principal */
+  --fg-dim: #8E8E8E;   /* Texte secondaire */
+  --border: #555555;   /* Lignes UI */
+}
+
+/* —— Reset —— */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* —— Base —— */
+body {
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 20px;
+  letter-spacing: 0.4px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* —— Conteneur principal —— */
+.calculator-container {
+  max-width: 540px;
+  margin: 40px auto 0;
+  padding: 24px 32px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* —— Titres —— */
+.title {
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  position: relative;
+}
+.title::after {
+  content: "_";
+  margin-left: 6px;
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--fg-dim);
+  margin-bottom: 28px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+/* —— Animation orbitale —— */
+.orbit-container { width: 100%; height: 80px; margin-bottom: 24px; }
+#orbit-svg { width: 100%; height: 100%; }
+#orbit-svg ellipse { stroke: var(--fg-dim); fill: none; stroke-width: 2; }
+#orbit-dot { fill: var(--accent); }
+
+/* —— Boutons distance —— */
+.distance-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.distance-button {
+  flex: 1 1 22%;
+  padding: 10px 0;
+  font-size: 0.85rem;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.distance-button:hover,
+.distance-button.active {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+}
+
+/* —— Slider vitesse —— */
+.speed-slider-container { margin-bottom: 28px; }
+.speed-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+#speed-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--fg-dim);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+#speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  margin-top: -6px;
+}
+#speed-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+/* —— Résultats —— */
+.comparison-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+@media (min-width: 600px) {
+  .comparison-container { flex-direction: row; }
+}
+.scenario {
+  flex: 1;
+  padding: 20px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  text-align: left;
+}
+.scenario h3 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+.result-item span {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.result-item:last-child { margin-bottom: 0; }
+
+/* —— Footer —— */
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* —— Highlight —— */
+.highlight { position:relative; display:inline-block; }
+.highlight::before {
+  content:"";
+  position:absolute;
+  left:-2px; right:-2px; bottom:0.1em;
+  height:55%;
+  background:var(--accent);
+  z-index:-1;
+  transform:skew(-3deg);
+}

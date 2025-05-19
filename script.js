@@ -86,3 +86,34 @@ speedSlider.addEventListener('input',update);
 
 // ---------- Init ----------
 update();
+
+// ---------- Animations SVG ----------
+const motionElems = document.querySelectorAll('animateMotion');
+const dashAnims   = document.querySelectorAll('path.trail > animate');
+
+// Mémorise les durées de base (en secondes)
+[...motionElems, ...dashAnims].forEach(el=>{
+  el.dataset.base = parseFloat(el.getAttribute('dur'));
+});
+
+// Met à l’échelle les durées selon la vitesse
+function syncOrbits(speed){
+  const factor = DEFAULT_SPEED / speed;           // 130/v
+  motionElems.forEach(el=>{
+    el.setAttribute('dur', (el.dataset.base * factor) + 's');
+  });
+  dashAnims.forEach(el=>{
+    el.setAttribute('dur', (el.dataset.base * factor) + 's');
+  });
+}
+
+// ---------- Init ----------
+update();           // met à jour les chiffres
+syncOrbits(DEFAULT_SPEED);
+
+// ---------- Events (ajout) ----------
+speedSlider.addEventListener('input', ()=>{
+  update();
+  syncOrbits(+speedSlider.value);    // re-synchronise les orbites
+});
+

@@ -14,7 +14,7 @@ body{
 .title{font-size:2rem;font-weight:700;letter-spacing:.08em;margin-bottom:4px;position:relative}
 .title::after{content:"_";color:var(--accent);margin-left:6px;animation:blink 1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
-.subtitle{font-size:.9rem;color:var(--fg-dim);margin-bottom:28px;font-weight:400}
+.subtitle{font-size:.9rem;color:var(--fg-dim);margin-bottom:8px;font-weight:400}
 
 /* —— Animation orbites sans traînée —— */
 .orbit-container{

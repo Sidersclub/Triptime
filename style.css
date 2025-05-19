@@ -60,7 +60,7 @@ body {
 .orbit-container{
   width:100%;
   max-width:300px;
-  margin:0 auto 24px;
+  margin:0 auto 8px;
 }
 svg{width:100%;height:auto}
 svg path{

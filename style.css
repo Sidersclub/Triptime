@@ -51,7 +51,7 @@ svg path:not(.trail){stroke:var(--fg-dim);stroke-width:.3;fill:none}
 .result-item span{font-weight:700;font-size:1rem}
 .result-item:last-child{margin-bottom:0}
 
-.footer{margin-top:24px;text-align:center;font-size:.8rem;color:var(--fg-dim)}
+.footer{margin-top:8px;text-align:center;font-size:.8rem;color:var(--fg-dim)}
 .footer a{color:var(--accent);text-decoration:none}.footer a:hover{text-decoration:underline}
 
 /* —— Highlight —— */

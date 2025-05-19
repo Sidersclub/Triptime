@@ -14,31 +14,31 @@
 <body>
   <div class="calculator-container">
     <h1 class="title">TripTime</h1>
-    <h2 class="subtitle">Comparateur de temps & impact CO₂</h2>
+    <h2 class="subtitle">Comparateur de temps &amp; impact CO₂</h2>
 
-     <!-- Animation : 5 ellipses + trainées -->
+    <!-- Animation : 5 ellipses + traînées courtes -->
     <div class="orbit-container" aria-hidden="true">
       <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Ellipses (rx, ry) croissants -->
-          <path id="e30" d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0" />
-          <path id="e45" d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0" />
-          <path id="e60" d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0" />
-          <path id="e75" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0" />
-          <path id="e90" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0" />
+          <!-- Ellipses de plus en plus grandes (rx/ry différents) -->
+          <path id="e30" d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0"/>
+          <path id="e45" d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0"/>
+          <path id="e60" d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0"/>
+          <path id="e75" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0"/>
+          <path id="e90" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0"/>
         </defs>
 
-        <!-- Centre moutarde -->
+        <!-- Centre -->
         <circle cx="150" cy="150" r="5" fill="#DEBA52"/>
 
-         <!-- trainées blanches (dash anim) -->
-        <path class="trail" style="--dur:4s"  d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0" />
-        <path class="trail" style="--dur:6s"  d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0" />
-        <path class="trail" style="--dur:8s"  d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0" />
-        <path class="trail" style="--dur:10s" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0" />
-        <path class="trail" style="--dur:12s" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0" />
-        
-         <!-- billes blanches -->
+        <!-- Traînées blanches synchronisées -->
+        <path class="trail" pathLength="1" style="--dur:4s"  d="M150 150 m-30 0 a30 20 0 1 0 60 0 a30 20 0 1 0 -60 0"/>
+        <path class="trail" pathLength="1" style="--dur:6s"  d="M150 150 m-45 0 a45 30 0 1 0 90 0 a45 30 0 1 0 -90 0"/>
+        <path class="trail" pathLength="1" style="--dur:8s"  d="M150 150 m-60 0 a60 40 0 1 0 120 0 a60 40 0 1 0 -120 0"/>
+        <path class="trail" pathLength="1" style="--dur:10s" d="M150 150 m-75 0 a75 50 0 1 0 150 0 a75 50 0 1 0 -150 0"/>
+        <path class="trail" pathLength="1" style="--dur:12s" d="M150 150 m-90 0 a90 60 0 1 0 180 0 a90 60 0 1 0 -180 0"/>
+
+        <!-- Billes -->
         <g fill="white">
           <circle r="3"><animateMotion dur="4s"  repeatCount="indefinite" rotate="auto"><mpath href="#e30"/></animateMotion></circle>
           <circle r="3"><animateMotion dur="6s"  repeatCount="indefinite" rotate="auto"><mpath href="#e45"/></animateMotion></circle>
@@ -49,7 +49,7 @@
       </svg>
     </div>
 
-    <!-- UI distance / vitesse inchangée -->
+    <!-- UI distance / vitesse -->
     <div class="distance-buttons">
       <button class="distance-button active" data-distance="50">50&nbsp;km</button>
       <button class="distance-button" data-distance="100">100&nbsp;km</button>
@@ -58,9 +58,8 @@
     </div>
 
     <div class="speed-slider-container">
-      <label class="speed-label" for="speed-slider">
-        Vitesse choisie&nbsp;: <span id="chosen-speed">130&nbsp;km/h</span>
-      </label>
+      <label class="speed-label" for="speed-slider">Vitesse choisie&nbsp;:
+        <span id="chosen-speed">130&nbsp;km/h</span></label>
       <input type="range" id="speed-slider" min="50" max="250" value="130" step="1">
     </div>
 
@@ -74,6 +73,7 @@
         <div class="result-item"><label>Diesel&nbsp;:</label><span id="default-diesel">--</span></div>
         <div class="result-item"><label>Essence&nbsp;:</label><span id="default-gas">--</span></div>
       </div>
+
       <div class="scenario" id="custom-scenario">
         <h3>Votre&nbsp;vitesse</h3>
         <div class="result-item"><label>Temps trajet&nbsp;:</label><span id="custom-time">--</span></div>
@@ -85,10 +85,9 @@
     </div>
   </div>
 
-  <p class="footer">
-    One of many side projects from
-    <a href="https://www.linkedin.com/in/tanguyduthion/" target="_blank" rel="noopener noreferrer"><span class="highlight">SidersClub</span></a>
-  </p>
+  <p class="footer">One of many side projects from
+    <a href="https://www.linkedin.com/in/tanguyduthion/" target="_blank" rel="noopener noreferrer">
+      <span class="highlight">SidersClub</span></a></p>
 
   <script src="script.js"></script>
 </body>

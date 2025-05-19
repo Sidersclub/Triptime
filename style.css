@@ -16,24 +16,26 @@ body{
 @keyframes blink{50%{opacity:0}}
 .subtitle{font-size:.9rem;color:var(--fg-dim);margin-bottom:28px;font-weight:400}
 
-/* —— Animation orbites —— */
-.orbit-container{width:100%;max-width:300px;margin:8px auto;}    /* marge réduite */
+/* —— Animation orbites sans traînée —— */
+.orbit-container{
+  width:100%;
+  max-width:300px;
+  margin:8px auto;
+}
 svg{width:100%;height:auto}
-svg path:not(.trail){stroke:var(--fg-dim);stroke-width:.3;fill:none}
 
-/* Traînée courte derrière chaque bille */
-.trail{
-  stroke:white;
-  stroke-width:1;
-  fill:none;
-  stroke-linecap:round;
-  /* 6 px visibles puis ~140 px transparents */
-  stroke-dasharray:6 140;
-  animation:trailMove var(--dur) linear infinite;
-}
-@keyframes trailMove{
-  to{ stroke-dashoffset:-146; }   /* 6+140 = 146 px : un tour complet */
-}
+/* Orbits fixes (gris discret) */
+svg path{stroke:var(--fg-dim);stroke-width:.4;fill:none}
+
+/* Masque totalement les anciennes traînées s'il en reste */
+svg .trail{display:none}
+
+/* Billes : tailles progressives — plus la trajectoire est grande, plus la bille est grosse */
+svg g > circle:nth-of-type(1){r:2px;}   /* ellipse la plus petite */
+svg g > circle:nth-of-type(2){r:3px;}
+svg g > circle:nth-of-type(3){r:4px;}
+svg g > circle:nth-of-type(4){r:5px;}
+svg g > circle:nth-of-type(5){r:6px;}   /* ellipse la plus grande */
 
 /* —— UI —— */
 .distance-buttons{display:flex;gap:8px;margin-bottom:40px}
